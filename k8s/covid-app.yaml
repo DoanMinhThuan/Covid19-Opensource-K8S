@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: 22120359/covid-backend
+        image: 22120359/covid-backend:4
         ports:
         - containerPort: 9000
         env:
@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
       - name: client
-        image: 22120359/covid-frontend
+        image: 22120359/covid-frontend:4
         ports:
         - containerPort: 80
 ---
