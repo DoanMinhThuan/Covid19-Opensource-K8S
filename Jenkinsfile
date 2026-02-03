@@ -21,7 +21,7 @@ pipeline {
     DOCKER_IMAGE_FE = '22120359/covid-frontend'
     DOCKER_IMAGE_BE = '22120359/covid-backend'
     REGISTRY_CRED = 'dockerhub-id'
-    GIT_REPO = 'github.com/DoanMinhThuan/Covid-Project.git' 
+    GIT_REPO = 'github.com/DoanMinhThuan/Covid19-Opensource-K8S.git' 
     GIT_CRED_ID = 'github-pat'
     EMAIL_GIT = 'jenkins@bot.com'
   }
