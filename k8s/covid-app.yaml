@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: covid-server
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: covid-server
@@ -15,12 +15,10 @@ spec:
     spec:
       containers:
       - name: server
-        # Image chính xác từ Docker Hub của bạn
         image: 22120359/covid-backend
         ports:
         - containerPort: 9000
         env:
-        # User/Pass root/123456 khớp với file note.docx
         - name: MONGO_URI
           value: "mongodb://root:123456@mongodb.default.svc.cluster.local:27017/covid-19?authSource=admin"
 ---
@@ -54,7 +52,6 @@ spec:
     spec:
       containers:
       - name: client
-        # Image chính xác từ Docker Hub của bạn
         image: 22120359/covid-frontend
         ports:
         - containerPort: 80
@@ -78,8 +75,6 @@ kind: Ingress
 metadata:
   name: covid-ingress
   annotations:
-    # ĐÃ XÓA DÒNG REWRITE TARGET ĐỂ TRÁNH LỖI PATH
-    # Chỉ giữ lại dòng giới hạn body nếu cần (tùy chọn)
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
 spec:
   ingressClassName: nginx
