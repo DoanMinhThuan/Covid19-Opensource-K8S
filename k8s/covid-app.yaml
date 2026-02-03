@@ -1,0 +1,111 @@
+# --- 1. BACKEND (Server) ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: covid-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: covid-server
+  template:
+    metadata:
+      labels:
+        app: covid-server
+    spec:
+      containers:
+      - name: server
+        # Image chính xác từ Docker Hub của bạn
+        image: 22120359/covid-backend
+        ports:
+        - containerPort: 9000
+        env:
+        # User/Pass root/123456 khớp với file note.docx
+        - name: MONGO_URI
+          value: "mongodb://root:123456@mongodb.default.svc.cluster.local:27017/covid-19?authSource=admin"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: covid-server-svc
+spec:
+  selector:
+    app: covid-server
+  ports:
+  - port: 9000
+    targetPort: 9000
+  type: ClusterIP
+
+---
+# --- 2. FRONTEND (Client) ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: covid-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: covid-client
+  template:
+    metadata:
+      labels:
+        app: covid-client
+    spec:
+      containers:
+      - name: client
+        # Image chính xác từ Docker Hub của bạn
+        image: 22120359/covid-frontend
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: covid-client-svc
+spec:
+  selector:
+    app: covid-client
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
+
+---
+# --- 3. INGRESS (Cổng Web) ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: covid-ingress
+  annotations:
+    # ĐÃ XÓA DÒNG REWRITE TARGET ĐỂ TRÁNH LỖI PATH
+    # Chỉ giữ lại dòng giới hạn body nếu cần (tùy chọn)
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      # Route chính xác 1:1 vào Backend
+      - path: /markers.geojson
+        pathType: Prefix
+        backend:
+          service:
+            name: covid-server-svc
+            port:
+              number: 9000
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: covid-server-svc
+            port:
+              number: 9000
+      # Trang chủ vào Frontend
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: covid-client-svc
+            port:
+              number: 80

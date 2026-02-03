@@ -1,0 +1,39 @@
+infrastructure/
+
+# --- Dependencies (Chặn thư viện ở mọi nơi) ---
+node_modules/
+**/node_modules/
+package-lock.json
+yarn.lock
+
+# --- Production Build (Chặn file đã build ra) ---
+build/
+dist/
+
+# --- Environment Variables (BẢO MẬT - Cấm để lộ key) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- Logs (Chặn file log lỗi) ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# --- OS generated files (File rác của Windows/Mac) ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- Editor settings (Cấu hình VSCode/IntelliJ) ---
+.idea/
+.vscode/
+*.swp
