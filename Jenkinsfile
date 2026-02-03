@@ -78,8 +78,8 @@ pipeline {
 
                     # 2. Sửa file YAML bằng lệnh sed (Tìm và thay thế version cũ bằng version mới)
                     # Lưu ý: File nằm trong thư mục k8s/
-                    sed -i 's|${DOCKER_IMAGE_BE}:.*|${DOCKER_IMAGE_BE}:${env.BUILD_NUMBER}|g' k8s/covid-app.yaml
-                    sed -i 's|${DOCKER_IMAGE_FE}:.*|${DOCKER_IMAGE_FE}:${env.BUILD_NUMBER}|g' k8s/covid-app.yaml
+                    sed -i "s|${DOCKER_IMAGE_BE}.*|${DOCKER_IMAGE_BE}:${env.BUILD_NUMBER}|g" k8s/covid-app.yaml
+                    sed -i "s|${DOCKER_IMAGE_FE}.*|${DOCKER_IMAGE_FE}:${env.BUILD_NUMBER}|g" k8s/covid-app.yaml
 
                     # 3. Commit và Push ngược lên GitHub
                     git add k8s/covid-app.yaml
